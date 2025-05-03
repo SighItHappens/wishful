@@ -1,14 +1,10 @@
 import { MongoClient } from 'mongodb';
 
-const uri: string | null = process.env.MONGODB_URI || null;
+const uri: string | null = process.env.MONGODB_URI || "mongodb://localhost:27017";
 const options = {};
 
 let client: MongoClient;
 let clientPromise: Promise<MongoClient>;
-
-if (!uri) {
-  throw new Error('Invalid/Missing environment variable: MONGODB_URI');
-}
 
 if (process.env.NODE_ENV === 'development') {
   const globalWithMongo = global as typeof globalThis & {
