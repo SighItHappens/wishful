@@ -1,9 +1,12 @@
 name: wishful
 services:
   wishful:
-    image: wishful-app
+    image: wishful-app:latest
+    depends_on:
+      - mongo
     environemnt:
       - APP_BASE_URL: https://wishful.frugalbotanists.com
+      - NODE_ENV: production
     networks:
       - backend
       - default
@@ -14,7 +17,6 @@ services:
       - AUTH0_DOMAIN
       - AUTH0_CLIENT_ID
       - AUTH0_CLIENT_SECRET
-      - AUTH0_AUDIENCE
       - MONGODB_URI
     restart: unless-stopped
   mongo:
@@ -22,6 +24,7 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME_FILE: /run/secrets/DB_ROOT_USERNAME
       - MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/DB_ROOT_PASSWORD
+      - MONGO_INITDB_DATABASE: wishful
     networks:
       - backend
     volumes:
