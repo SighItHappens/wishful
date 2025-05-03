@@ -1,0 +1,64 @@
+name: wishful
+services:
+  wishful:
+    image: wishful-app
+    environemnt:
+      - APP_BASE_URL: https://wishful.frugalbotanists.com
+    networks:
+      - backend
+      - default
+    ports:
+      - 3000:3000
+    secrets:
+      - AUTH0_SECRET
+      - AUTH0_DOMAIN
+      - AUTH0_CLIENT_ID
+      - AUTH0_CLIENT_SECRET
+      - AUTH0_AUDIENCE
+      - MONGODB_URI
+    restart: unless-stopped
+  mongo:
+    image: mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME_FILE: /run/secrets/DB_ROOT_USERNAME
+      - MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/DB_ROOT_PASSWORD
+    networks:
+      - backend
+    volumes:
+      - mongo-data:/data/db
+      - scripts/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    ports:
+      - 27017:27017
+    secrets:
+      - DB_ROOT_USERNAME
+      - DB_ROOT_PASSWORD
+      - DB_APP_USERNAME
+      - DB_APP_PASSWORD
+    restart: unless-stopped
+
+secrets:
+  DB_ROOT_USERNAME:
+    file: ./secrets/db_root_username.txt
+  DB_ROOT_PASSWORD:
+    file: ./secrets/db_root_password.txt
+  DB_APP_USERNAME:
+    file: ./secrets/db_app_username.txt
+  DB_APP_PASSWORD:
+    file: ./secrets/db_app_password.txt
+  AUTH0_SECRET:
+    file: ./secrets/auth0_secret.txt
+  AUTH0_DOMAIN:
+    file: ./secrets/auth0_domain.txt
+  AUTH0_CLIENT_ID:
+    file: ./secrets/auth0_client_id.txt
+  AUTH0_CLIENT_SECRET:
+    file: ./secrets/auth0_client_secret.txt
+  MONGODB_URI:
+    file: ./secrets/mongodb_uri.txt
+volumes:
+  mongo-data:
+networks:
+  default:
+    name: wishful-network
+  backend:
+    driver: bridge
