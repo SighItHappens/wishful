@@ -1,17 +1,17 @@
 name: wishful
 services:
   wishful:
-    image: wishful-app:latest
+    image: sighithappens/wishful:latest
     depends_on:
       - mongo
-    environemnt:
-      - APP_BASE_URL: https://wishful.frugalbotanists.com
-      - NODE_ENV: production
+    environment:
+      APP_BASE_URL: https://wishful.frugalbotanists.com
+      NODE_ENV: production
     networks:
       - backend
       - default
     ports:
-      - 3000:3000
+      - 8080:3000
     secrets:
       - AUTH0_SECRET
       - AUTH0_DOMAIN
@@ -22,14 +22,14 @@ services:
   mongo:
     image: mongo
     environment:
-      - MONGO_INITDB_ROOT_USERNAME_FILE: /run/secrets/DB_ROOT_USERNAME
-      - MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/DB_ROOT_PASSWORD
-      - MONGO_INITDB_DATABASE: wishful
+      MONGO_INITDB_ROOT_USERNAME_FILE: /run/secrets/DB_ROOT_USERNAME
+      MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/DB_ROOT_PASSWORD
+      MONGO_INITDB_DATABASE: wishful
     networks:
       - backend
     volumes:
       - mongo-data:/data/db
-      - scripts/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - ./scripts/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
     ports:
       - 27017:27017
     secrets:
@@ -37,6 +37,7 @@ services:
       - DB_ROOT_PASSWORD
       - DB_APP_USERNAME
       - DB_APP_PASSWORD
+    command: ["mongod", "--auth"]
     restart: unless-stopped
 
 secrets:
