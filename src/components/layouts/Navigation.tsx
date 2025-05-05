@@ -5,11 +5,13 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { FaGift, FaSignOutAlt, FaUser, FaBars, FaTimes } from 'react-icons/fa';
 import { getCurrentUser } from '@/services/authService';
+import { findUserExistsByAuth0Id } from '@/services/userService';
 import { animate } from 'animejs';
 import { User } from '@auth0/nextjs-auth0/types';
 
 export default function Navigation() {
   const [user, setUser] = useState<User | undefined>(undefined);
+  const [dbUserExists, setDbUserExists] = useState<boolean>(false)
   const [loading, setLoading] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
@@ -21,7 +23,12 @@ export default function Navigation() {
     const checkUser = async () => {
       try {
         const userData = await getCurrentUser();
-        setUser(userData);
+        if (userData && await findUserExistsByAuth0Id(userData?.sub)) {
+          setDbUserExists(true);
+          setUser(userData);
+        } else {
+          setUser(undefined);
+        }
       } catch {
         setUser(undefined);
       } finally {
