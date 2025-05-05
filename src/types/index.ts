@@ -32,11 +32,13 @@ export interface AppUser {
     createdAt: Date;
     lastLogin: Date;
     bio: string;
-    preferences?: {
-        notifyOnShare: boolean;
-        publicProfile: boolean;
-        hideReservedItems: boolean;
-    }
+    preferences?: AppUserPreferences
+}
+
+export interface AppUserPreferences {
+    notifyOnShare: boolean;
+    publicProfile: boolean;
+    hideReservedItems: boolean;
 }
 
 export interface WishlistItem {
