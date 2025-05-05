@@ -1,4 +1,5 @@
 import { WithId } from 'mongodb';
+import { AppUserPreferences } from '.';
 
 export interface AppUserModel {
     auth0Id: string;
@@ -8,6 +9,7 @@ export interface AppUserModel {
     createdAt: Date;
     lastLogin: Date;
     bio: string;
+    preferences?: AppUserPreferences
 }
 
 export interface WishlistModel {
