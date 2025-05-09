@@ -113,7 +113,7 @@ export default function CreateWishlistModal({ onClose, onWishlistCreated }: Crea
           <h2 className="text-2xl font-bold text-gray-900">Create New Wishlist</h2>
           <button 
             onClick={handleAnimatedClose}
-            className="text-gray-500  cursor-pointer hover:text-gray-700"
+            className="text-gray-500 cursor-pointer hover:text-gray-700"
           >
             <FaTimes />
           </button>
@@ -121,7 +121,7 @@ export default function CreateWishlistModal({ onClose, onWishlistCreated }: Crea
         
         <form onSubmit={handleSubmit} className="p-6 text-gray-900">
           {error && (
-            <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-4">
+            <div className="bg-red-50 text-red-600 p-3 rounded-md mb-4">
               {error}
             </div>
           )}
@@ -134,7 +134,7 @@ export default function CreateWishlistModal({ onClose, onWishlistCreated }: Crea
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-4 py-2 border border-gray-300 shadow-sm rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               required
             />
           </div>
@@ -146,7 +146,7 @@ export default function CreateWishlistModal({ onClose, onWishlistCreated }: Crea
               name="description"
               value={formData.description}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 h-24"
+              className="w-full px-4 py-2 border border-gray-300 shadow-sm rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 h-24"
             ></textarea>
           </div>
           
@@ -154,14 +154,14 @@ export default function CreateWishlistModal({ onClose, onWishlistCreated }: Crea
             <button
               type="button"
               onClick={handleAnimatedClose}
-              className="px-4 py-2 cursor-pointer border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+              className="px-4 py-2 cursor-pointer border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="px-4 py-2 bg-indigo-600 cursor-pointer hover:bg-indigo-700 text-white rounded-lg disabled:opacity-50"
+              className="px-4 py-2 bg-indigo-600 cursor-pointer hover:bg-indigo-700 text-white rounded-md disabled:opacity-50"
             >
               {loading ? 'Creating...' : 'Create Wishlist'}
             </button>

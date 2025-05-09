@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 
 import { animate } from 'animejs';
-import { AppUser } from '@/types';
+import { AppUser, AppUserPreferences, preferenceOptionLabels, defaultAppUserPreferences } from '@/types';
 
 interface ProfileCardProps {
   initialProfile: AppUser;
@@ -77,18 +77,16 @@ export default function ProfileCard({ initialProfile }: ProfileCardProps) {
                 <div className="mb-6">
                   <h3 className="font-semibold text-gray-700 mb-2">Preferences</h3>
                   <ul className="space-y-1">
-                    <li className="flex items-center gap-2 text-gray-900">
-                      <span className={`w-2 h-2 rounded-full ${getPreferenceDotClasses(profile.preferences?.notifyOnShare ?? false)}`}></span>
-                      Notifications for shared wishlists
-                    </li>
-                    <li className="flex items-center gap-2 text-gray-900">
-                      <span className={`w-2 h-2 rounded-full ${getPreferenceDotClasses(profile.preferences?.publicProfile ?? false)}`}></span>
-                      Public profile
-                    </li>
-                    <li className="flex items-center gap-2 text-gray-900">
-                      <span className={`w-2 h-2 rounded-full ${getPreferenceDotClasses(profile.preferences?.hideReservedItems ?? false)}`}></span>
-                      Hide reserved items
-                    </li>
+                    {preferenceOptionLabels.map((option) => (
+                      <li key={option.key} className="flex items-center gap-2 text-gray-900">
+                        <span
+                          className={`w-2 h-2 rounded-full ${getPreferenceDotClasses(
+                            profile.preferences?.[option.key as keyof AppUserPreferences] ?? defaultAppUserPreferences[option.key as keyof AppUserPreferences]
+                          )}`}
+                        ></span>
+                        {option.label}
+                      </li>
+                    ))}
                   </ul>
                 </div>
               </div>

@@ -12,7 +12,7 @@ export default function Home() {
       </p>
       
       <div className="flex flex-wrap gap-4 justify-center">
-        <Link href="/dashboard" className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg flex items-center gap-2 transition-all">
+        <Link href="/dashboard" className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-md flex items-center gap-2 transition-all">
           <span>Get Started</span>
           <FaArrowRight />
         </Link>

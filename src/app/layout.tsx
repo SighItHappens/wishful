@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 import Footer from "@/components/layouts/Footer";
 import CustomBackground from "@/components/layouts/CustomBackground";
 import { auth0 } from "@/lib/auth0"
+import { Toaster } from 'react-hot-toast';
 import "./globals.css";
 
 const geistSans = Geist({
@@ -42,7 +43,7 @@ export default async function RootLayout({
               <main className="flex flex-col flex-grow justify-center">
                 {children}
               </main>
-              
+              <Toaster position="bottom-right"/>
             </CustomBackground>
           </ThemeProvider>
           <Footer />

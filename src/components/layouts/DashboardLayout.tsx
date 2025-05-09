@@ -35,7 +35,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   return (
     <MainLayout>
       <div className="flex flex-col md:flex-row">
-        <aside className="w-full md:w-64 bg-white rounded-lg shadow-sm py-6 px-4 mb-6 md:mb-0 md:mr-6">
+        <aside className="w-full md:w-64 bg-white rounded-md shadow-sm py-6 px-4 mb-6 md:mb-0 md:mr-6">
           <nav>
             <ul className="space-y-2">
               {menuItems.map((item, ) => (
@@ -59,7 +59,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         
         {/* Main content */}
         <div className="flex-1">
-          <div className="bg-white rounded-lg shadow-sm p-6">
+          <div className="bg-white rounded-md shadow-sm p-6">
             {children}
           </div>
         </div>

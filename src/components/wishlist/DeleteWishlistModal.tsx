@@ -103,14 +103,14 @@ export default function DeleteWishlistModal({ wishlist, onClose }: DeleteWishlis
         <div className="flex justify-end gap-3">
           <button
             onClick={handleAnimatedClose}
-            className="px-4 py-2 cursor-pointer border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+            className="px-4 py-2 cursor-pointer border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
           >
             Cancel
           </button>
           <button
             onClick={handleDeleteWishlist}
             disabled={isDeleting}
-            className="px-4 py-2 cursor-pointer bg-red-600 hover:bg-red-700 text-white rounded-lg disabled:opacity-50"
+            className="px-4 py-2 cursor-pointer bg-red-600 hover:bg-red-700 text-white rounded-md disabled:opacity-50"
           >
             {isDeleting ? 'Deleting...' : 'Delete'}
           </button>

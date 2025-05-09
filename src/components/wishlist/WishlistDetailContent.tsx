@@ -55,13 +55,13 @@ export default function WishlistDetail({
           <div className="flex w-full md:w-auto sm:w-auto lg:justify-end justify-center gap-2 my-2">
             <button
               onClick={() => setShowShareModal(true)}
-              className="bg-indigo-100 hover:bg-indigo-200 text-indigo-800 px-4 py-2 rounded-lg flex items-center gap-2 cursor-pointer transition-all"
+              className="bg-indigo-100 hover:bg-indigo-200 text-indigo-800 px-4 py-2 rounded-md flex items-center gap-2 cursor-pointer transition-all"
             >
               <FaShare /> Share
             </button>
             <button
               onClick={() => setShowDeleteConfirm(true)}
-              className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 cursor-pointer transition-colors"
+              className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md flex items-center gap-2 cursor-pointer transition-colors"
             >
               <FaTrash size={16} /> Delete Wishlist
             </button>
@@ -76,7 +76,7 @@ export default function WishlistDetail({
           <p className="text-gray-500 mb-6">Add your first gift idea to get started!</p>
           <button
             onClick={() => setShowAddItemModal(true)}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg inline-flex items-center gap-2 cursor-pointer"
+            className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-md inline-flex items-center gap-2 cursor-pointer"
           >
             <FaPlus /> Add Item
           </button>
