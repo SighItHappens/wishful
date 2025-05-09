@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback, FormEvent, ChangeEvent } from 'react';
-import { FaTimes, FaLink, FaSpinner } from 'react-icons/fa';
+import { useState, useRef, useEffect, useCallback, FormEvent, ChangeEvent, Fragment } from 'react';
+import { FaTimes, FaLink, FaSpinner, FaChevronDown, FaCheck } from 'react-icons/fa';
 import { addItemToOwnWishlist } from '@/services/wishlistService';
 import { animate, createSpring } from 'animejs';
-import { parseProductUrl }from '@/services/urlParserService';
+import { parseProductUrl } from '@/services/urlParserService';
 import { AddWishlistItemForm, WishlistItem } from '@/types';
 
 interface AddItemModalProps {
@@ -175,7 +175,7 @@ export default function AddItemModal({ wishlistId, onClose, onItemAdded }: AddIt
               </div>
             </div>
             
-            <div className="bg-indigo-700 rounded-lg p-6 mb-6 hidden md:block">
+            <div className="bg-indigo-700 rounded-md p-6 mb-6 hidden md:block">
               <h3 className="font-medium mb-3">Supported Sites</h3>
               <ul className="list-disc list-inside space-y-1 text-indigo-100">
                 <li>Walmart</li>
@@ -184,7 +184,7 @@ export default function AddItemModal({ wishlistId, onClose, onItemAdded }: AddIt
               </ul>
             </div>
             
-            <div className="bg-white text-indigo-600 p-4 rounded-lg hidden md:block">
+            <div className="bg-white text-indigo-600 p-4 rounded-md hidden md:block">
               <h3 className="font-bold mb-2">How it works</h3>
               <p className="text-gray-700 text-sm">
                 Paste a product URL from any supported site and we&apos;ll extract the product title, 
@@ -209,7 +209,7 @@ export default function AddItemModal({ wishlistId, onClose, onItemAdded }: AddIt
           
           <form onSubmit={handleSubmit} className="p-6">
             {error && (
-              <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-4">
+              <div className="bg-red-50 text-red-600 p-3 rounded-md mb-4">
                 {error}
               </div>
             )}
@@ -222,7 +222,7 @@ export default function AddItemModal({ wishlistId, onClose, onItemAdded }: AddIt
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border text-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-4 py-2 border border-gray-300 text-gray-700 shadow-sm rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                 required
               />
             </div>
@@ -234,7 +234,7 @@ export default function AddItemModal({ wishlistId, onClose, onItemAdded }: AddIt
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border text-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 h-20"
+                className="w-full px-4 py-2 border border-gray-300 text-gray-700 shadow-sm rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 h-20"
               ></textarea>
             </div>
             
@@ -252,7 +252,7 @@ export default function AddItemModal({ wishlistId, onClose, onItemAdded }: AddIt
                     placeholder="0.00"
                     value={formData.price}
                     onChange={handleChange}
-                    className="w-full pl-7 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full pl-7 pr-4 py-2 border border-gray-300 shadow-sm rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                     required
                   />
                 </div>
@@ -268,7 +268,7 @@ export default function AddItemModal({ wishlistId, onClose, onItemAdded }: AddIt
                     name="priority"
                     value={formData.priority}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 appearance-none"
+                    className="w-full px-3 py-2 border border-gray-300 shadow-sm rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 appearance-none"
                     required
                   >
                     <option value="1">1 - Low</option>
@@ -294,7 +294,7 @@ export default function AddItemModal({ wishlistId, onClose, onItemAdded }: AddIt
                 type="url"
                 value={formData.url}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-4 py-2 border border-gray-300 shadow-sm rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                 required
               />
             </div>
@@ -306,7 +306,7 @@ export default function AddItemModal({ wishlistId, onClose, onItemAdded }: AddIt
                 name="notes"
                 value={formData.notes}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 h-20"
+                className="w-full px-4 py-2 border border-gray-300 shadow-sm rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 h-20"
                 placeholder="Size, color, preferences, etc."
               ></textarea>
             </div>
@@ -315,14 +315,14 @@ export default function AddItemModal({ wishlistId, onClose, onItemAdded }: AddIt
               <button
                 type="button"
                 onClick={handleAnimatedClose}
-                className="px-4 py-2 border border-gray-300 rounded-lg cursor-pointer text-gray-700 hover:bg-gray-50"
+                className="px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-gray-700 hover:bg-gray-50"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={loading}
-                className="px-4 py-2 bg-indigo-600 cursor-pointer hover:bg-indigo-700 text-white rounded-lg disabled:opacity-50"
+                className="px-4 py-2 bg-indigo-600 cursor-pointer hover:bg-indigo-700 text-white rounded-md disabled:opacity-50"
               >
                 {loading ? 'Adding...' : 'Add Item'}
               </button>

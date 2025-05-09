@@ -165,7 +165,7 @@ export default function ShareWishlistModal({ wishlist, onClose }: ShareWishlistM
           <div className="flex justify-end">
             <button
               onClick={handleAnimatedClose}
-              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg"
+              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md"
             >
               Done
             </button>

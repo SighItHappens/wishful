@@ -1,4 +1,3 @@
-// /app/dashboard/layout.tsx (Example)
 'use client';
 
 import DashboardLayout from '@/components/layouts/DashboardLayout';
@@ -12,9 +11,9 @@ export default function LayoutForDashboard({
 }) {
   return (
     <ThemeProvider>
-        <DashboardLayout>
+      <DashboardLayout>
         {children}
-        </DashboardLayout>
+      </DashboardLayout>
     </ThemeProvider>
   );
 }

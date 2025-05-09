@@ -1,19 +1,52 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FaPlus } from 'react-icons/fa';
 import ItemCardAnimation from '@/components/animations/ItemCardAnimation';
 import CreateWishlistModal from '@/components/wishlist/CreateWishlistModal';
-import { Wishlist } from '@/types';
+import { Wishlist, AppUser } from '@/types';
 import WishlistCard from '@/components/wishlist/WishlistCard';
+import toast from 'react-hot-toast';
+import Link from 'next/link';
+import GenericToast from '@/components/ui/GenericToast';
 
 interface DashboardContentProps {
   initialWishlists: Wishlist[];
+  userProfile: AppUser;
 }
 
-export default function DashboardContent({ initialWishlists }: DashboardContentProps) {
+export default function DashboardContent({ initialWishlists, userProfile }: DashboardContentProps) {
   const [wishlists, setWishlists] = useState<Wishlist[]>(initialWishlists);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const TOAST_DURATION = 10000;
+
+  useEffect(() => {
+    if (userProfile && userProfile.name === userProfile.email) {
+      toast.custom(
+        (t) => (
+          <GenericToast
+            t={t}
+            duration={TOAST_DURATION}
+            variant="info"
+            headerText="Update Your Profile"
+            bodyContent={
+              <>
+                Your name seems to match your email. Please <Link href="/user/profile/edit" className="font-medium text-indigo-400 underline hover:text-indigo-300">update your profile</Link>.
+              </>
+            }
+          />
+        ),
+        {
+          id: 'profile-update-notification',
+          duration: TOAST_DURATION,
+        }
+      );
+    }
+    
+    return () => {
+      toast.dismiss('profile-update-notification');
+    };
+  }, [userProfile]);
 
   const handleWishlistCreated = (newWishlist: Wishlist) => {
     setWishlists(prevWishlists => [...prevWishlists, newWishlist]);
@@ -32,7 +65,7 @@ export default function DashboardContent({ initialWishlists }: DashboardContentP
           <p className="text-gray-500 mb-6">Create your first wishlist to start tracking gift ideas!</p>
           <button
             onClick={() => setShowCreateModal(true)}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg inline-flex items-center gap-2"
+            className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-md inline-flex items-center gap-2"
           >
             <FaPlus /> Create Wishlist
           </button>
