@@ -7,6 +7,7 @@ import { FaUpload, FaUserCircle } from 'react-icons/fa';
 import toast from 'react-hot-toast';
 import { updateCurrentUser } from '@/services/userService';
 import { Switch } from '@headlessui/react';
+import ThemeToggle from '@/components/ui/ThemeToggle';
 import GenericToast from '@/components/ui/GenericToast';
 
 interface ProfileEditFormProps {
@@ -159,103 +160,107 @@ export default function ProfileEditForm({ initialProfile }: ProfileEditFormProps
 
   return (
     <div className="h-full flex flex-col items-center justify-center px-4 py-8">
-      <div className="bg-white rounded-xl shadow-lg lg:w-1/2 md:w-3/4 w-11/12 max-w-6xl p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">Edit Profile</h1>
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg lg:w-1/2 md:w-3/4 w-11/12 max-w-6xl overflow-hidden">
+        <div className="bg-indigo-600 flex justify-between items-center px-6 py-5 mb-6">
+          <h1 className="text-2xl font-bold text-gray-100">Edit Profile</h1>
         </div>
         {error && (
-          <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-md mb-6" role="alert">
-            <p className="font-bold">Error</p>
+          <div className="bg-red-100 dark:bg-red-900 border-l-4 border-red-500 dark:border-red-700 text-red-700 dark:text-red-200 p-4 rounded-md mb-6" role="alert">
+            <p className="font-bold">Error</p> {/* Consider dark:text-red-100 for better contrast if needed */}
             <p>{error}</p>
           </div>
         )}
-        <form onSubmit={handleSubmit} className="w-full">
+        <form onSubmit={handleSubmit} className="w-full p-6">
           <div className="flex flex-col md:flex-row gap-8 w-full">
             {/* Avatar Section */}
             <div className="flex flex-col md:w-1/2 space-y-5">
               <div className="flex flex-col items-center">
                 <div className="relative mb-4">
-                  <div className="w-32 h-32 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden border-2 border-indigo-100">
+                  <div className="w-32 h-32 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center overflow-hidden border-2 border-indigo-100 dark:border-indigo-800">
                     {picture ? (
                       <img src={picture} alt="User Avatar" className="w-full h-full object-cover" />
                     ) : (
-                      <FaUserCircle className="w-full h-full text-gray-400" />
+                      <FaUserCircle className="w-full h-full text-gray-400 dark:text-gray-500" />
                     )}
                   </div>
                 </div>
                 <div className="flex flex-col items-center">
-                  <label htmlFor="avatar-upload" className="cursor-not-allowed bg-gray-200 text-gray-500 font-semibold py-2 px-4 rounded inline-flex items-center gap-2 text-sm opacity-50">
+                  <label htmlFor="avatar-upload" className="cursor-not-allowed bg-gray-200 dark:bg-gray-600 text-gray-500 dark:text-gray-400 font-semibold py-2 px-4 rounded inline-flex items-center gap-2 text-sm opacity-50">
                     <FaUpload />
                     <span>Upload Avatar</span>
                   </label>
                   <input id="avatar-upload" type="file" className="hidden" accept="image/*" onChange={handleAvatarChange} disabled />
-                  <p className="text-xs text-gray-500 mt-2">Upload not implemented</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">Upload not implemented</p>
                 </div>
               </div>
 
               <div className="w-full">
-                <label htmlFor="name" className="block font-semibold text-gray-700 mb-1 text-left">Name</label>
+                <label htmlFor="name" className="block font-semibold text-gray-700 dark:text-gray-300 mb-1 text-left">Name</label>
                 <input
                   type="text"
                   id="name"
                   value={name}
                   onChange={handleNameChange}
-                  className="w-full px-3 py-2 border border-gray-300 text-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-50"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-50 dark:disabled:bg-gray-600"
                   required
                   disabled={isSubmitting}
                 />
               </div>
               <div className="w-full">
-                <label htmlFor="email" className="block font-semibold text-gray-700 mb-1 text-left">Email</label>
-                <input type="email" id="email" value={initialProfile.email || 'No email found'} className="w-full px-3 py-2 border border-gray-300 text-gray-400 rounded-md bg-gray-100 cursor-not-allowed" disabled />
-                <p className="text-xs text-gray-500 mt-1 text-left">Email cannot be changed.</p>
+                <label htmlFor="email" className="block font-semibold text-gray-700 dark:text-gray-300 mb-1 text-left">Email</label>
+                <input type="email" id="email" value={initialProfile.email || 'No email found'} className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 text-gray-400 dark:text-gray-500 rounded-md bg-gray-100 dark:bg-gray-700 cursor-not-allowed" disabled />
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 text-left">Email cannot be changed.</p>
               </div>
             </div>
 
             {/* Form Fields (Bio and Preferences) */}
-            <div className="flex-1 space-y-6">
+            <div className="flex-1 space-y-4">
               <div>
-                <label htmlFor="bio" className="font-semibold text-gray-700 mb-1">Bio</label>
+                <label htmlFor="bio" className="font-bold text-gray-700 dark:text-gray-300 mb-1">Bio</label>
                 <textarea
                   id="bio"
                   rows={4}
                   value={bio}
                   onChange={handleBioChange}
-                  className="w-full px-3 py-2 border border-gray-300 text-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-50"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-50 dark:disabled:bg-gray-600"
                   placeholder="Tell us a little about yourself..."
                   disabled={isSubmitting}
                 />
               </div>
               {/* Preferences Section */}
               <div>
-                <h3 className="font-semibold text-gray-700 mb-3">Preferences</h3>
+                <h2 className="font-bold text-gray-700 dark:text-gray-300 mb-3">Preferences</h2>
                 {preferenceOptionLabels.map((option) => {
                   const isEnabled = preferences[option.key as keyof AppUserPreferences] || false;
                   
                   return (
                     <div key={option.key} className="flex items-center justify-between py-1">
-                      <span className="text-gray-900">{option.label}</span>
+                      <span className="text-gray-900 dark:text-gray-100">{option.label}</span>
                       <Switch
                         checked={isEnabled}
                         onChange={(checked) => handlePreferenceChange(option.key as keyof AppUserPreferences, checked)}
                         disabled={isSubmitting}
-                        className={`group inline-flex h-5 w-9 items-center rounded-full bg-gray-200 transition data-checked:bg-indigo-700 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-indigo-400 ${
+                        className={`group inline-flex h-5 w-9 items-center rounded-full bg-gray-200 dark:bg-gray-600 transition data-checked:bg-indigo-700 dark:data-checked:bg-indigo-500 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-indigo-400 ${
                           isSubmitting ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'
                         }`}
                       >
                         <span className="sr-only">Enable {option.label}</span>
-                        <span className="size-3.5 translate-x-1 rounded-full bg-white transition group-data-checked:translate-x-5"/>
+                        <span className="size-3.5 translate-x-1 rounded-full bg-white dark:bg-gray-300 transition group-data-checked:translate-x-5"/>
                       </Switch>
                     </div>
                   );
                 })}
+                <div className="flex items-center justify-between py-3 mt-2 border-t border-gray-200 dark:border-gray-700">
+                  <span className="text-gray-900 dark:text-gray-100">Theme</span>
+                  <ThemeToggle />
+                </div>
               </div>
             </div>
           </div>
 
           {/* Action Buttons */}
-          <div className="flex justify-end gap-4 mt-8 pt-4 border-t border-gray-200">
-            <button type="button" onClick={handleCancel} disabled={isSubmitting} className="px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-gray-700 hover:bg-gray-50">
+          <div className="flex justify-end gap-4 mt-8 pt-4 border-t border-gray-200 dark:border-gray-700">
+            <button type="button" onClick={handleCancel} disabled={isSubmitting} className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md cursor-pointer text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
               Cancel
             </button>
             <button type="submit" disabled={isSubmitting} className="px-4 py-2 bg-indigo-600 cursor-pointer hover:bg-indigo-700 text-white rounded-md disabled:opacity-50">

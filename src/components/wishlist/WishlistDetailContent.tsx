@@ -51,32 +51,32 @@ export default function WishlistDetail({
     <div className="mx-auto">
       <div className="mb-8">
         <div className="flex flex-wrap items-center sm:justify-between justify-center mb-4">
-          <h1 className="text-3xl font-bold text-gray-800">{wishlist.name}</h1>
+          <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100">{wishlist.name}</h1>
           <div className="flex w-full md:w-auto sm:w-auto lg:justify-end justify-center gap-2 my-2">
             <button
               onClick={() => setShowShareModal(true)}
-              className="bg-indigo-100 hover:bg-indigo-200 text-indigo-800 px-4 py-2 rounded-md flex items-center gap-2 cursor-pointer transition-all"
+              className="bg-indigo-100 hover:bg-indigo-200 dark:bg-indigo-900 dark:hover:bg-indigo-800 text-indigo-800 dark:text-indigo-300 px-4 py-2 rounded-md flex items-center gap-2 cursor-pointer transition-all"
             >
               <FaShare /> Share
             </button>
             <button
               onClick={() => setShowDeleteConfirm(true)}
-              className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md flex items-center gap-2 cursor-pointer transition-colors"
+              className="bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800 text-white px-4 py-2 rounded-md flex items-center gap-2 cursor-pointer transition-colors"
             >
               <FaTrash size={16} /> Delete Wishlist
             </button>
           </div>
         </div>
-        <p className="text-gray-600">{wishlist.description}</p>
+        <p className="text-gray-600 dark:text-gray-300">{wishlist.description}</p>
       </div>
       
       {items.length === 0 ? (
-        <div className="bg-gray-50 rounded-xl p-8 text-center">
-          <h3 className="text-xl font-medium text-gray-700 mb-4">No items in this wishlist yet</h3>
-          <p className="text-gray-500 mb-6">Add your first gift idea to get started!</p>
+        <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-8 text-center">
+          <h3 className="text-xl font-medium text-gray-700 dark:text-gray-200 mb-4">No items in this wishlist yet</h3>
+          <p className="text-gray-500 dark:text-gray-400 mb-6">Add your first gift idea to get started!</p>
           <button
             onClick={() => setShowAddItemModal(true)}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-md inline-flex items-center gap-2 cursor-pointer"
+            className="bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 text-white px-6 py-2 rounded-md inline-flex items-center gap-2 cursor-pointer"
           >
             <FaPlus /> Add Item
           </button>
@@ -103,13 +103,13 @@ export default function WishlistDetail({
           <ItemCardAnimation index={items.length}>
             <div 
               onClick={() => setShowAddItemModal(true)}
-              className="bg-white border border-gray-200 border-dashed rounded-xl p-6 flex flex-col items-center justify-center h-full min-h-[180px] hover:bg-gray-50 shadow-md hover:shadow-xl transition-colors cursor-pointer"
+              className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 border-dashed rounded-xl p-6 flex flex-col items-center justify-center h-full min-h-[180px] shadow-md hover:shadow-lg dark:hover:shadow-gray-600 transition-colors cursor-pointer"
             >
-              <div className="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mb-4">
-                <FaPlus className="text-indigo-600 text-2xl" />
+              <div className="w-16 h-16 bg-indigo-100 dark:bg-indigo-900 rounded-full flex items-center justify-center mb-4">
+                <FaPlus className="text-indigo-600 dark:text-indigo-400 text-2xl" />
               </div>
-              <h3 className="text-lg font-medium text-gray-700 mb-2">Add new item</h3>
-              <p className="text-gray-500 text-center">Click to add a new gift idea to your wishlist</p>
+              <h3 className="text-lg font-medium text-gray-700 dark:text-gray-200 mb-2">Add new item</h3>
+              <p className="text-gray-500 dark:text-gray-400 text-center">Click to add a new gift idea to your wishlist</p>
             </div>
           </ItemCardAnimation>
         </div>

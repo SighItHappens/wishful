@@ -90,27 +90,27 @@ export default function DeleteWishlistModal({ wishlist, onClose }: DeleteWishlis
     <div className="fixed inset-0 z-50 text-fray-400 flex items-center justify-center p-4">
       <div 
         ref={backdropRef}
-        className="absolute inset-0 bg-black opacity-75" 
+        className="absolute inset-0 bg-black opacity-75 dark:opacity-80" 
         onClick={handleAnimatedClose}
       ></div>
 
       <div 
         ref={modalRef}
-        className="bg-white rounded-xl shadow-xl w-full max-w-md p-6 relative z-10"
+        className="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-md p-6 relative z-10"
       >
-        <h3 className="text-xl font-bold text-red-600 mb-4">Delete Wishlist</h3>
-        <p className="text-gray-700 mb-6">Are you sure you want to delete &quot;{wishlist.name}&quot;? This action cannot be undone.</p>
+        <h3 className="text-xl font-bold text-red-600 dark:text-red-500 mb-4">Delete Wishlist</h3>
+        <p className="text-gray-700 dark:text-gray-300 mb-6">Are you sure you want to delete &quot;{wishlist.name}&quot;? This action cannot be undone.</p>
         <div className="flex justify-end gap-3">
           <button
             onClick={handleAnimatedClose}
-            className="px-4 py-2 cursor-pointer border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+            className="px-4 py-2 cursor-pointer border border-gray-300 dark:border-gray-600 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
           >
             Cancel
           </button>
           <button
             onClick={handleDeleteWishlist}
             disabled={isDeleting}
-            className="px-4 py-2 cursor-pointer bg-red-600 hover:bg-red-700 text-white rounded-md disabled:opacity-50"
+            className="px-4 py-2 cursor-pointer bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800 text-white rounded-md disabled:opacity-50"
           >
             {isDeleting ? 'Deleting...' : 'Delete'}
           </button>

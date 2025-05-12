@@ -10,10 +10,8 @@ export default function LayoutForDashboard({
   children: ReactNode;
 }) {
   return (
-    <ThemeProvider>
-      <DashboardLayout>
-        {children}
-      </DashboardLayout>
-    </ThemeProvider>
+    <DashboardLayout>
+      {children}
+    </DashboardLayout>
   );
 }
