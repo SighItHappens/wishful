@@ -207,20 +207,26 @@ export async function markOwnItemAsPurchased(wishlistId: string, itemId: string)
 }
 
 export async function shareWishlist(wishlistId: string, isPublic: boolean) {
-  const response = await fetch(`${API_URL}/wishlists/${wishlistId}/share`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ is_public: isPublic }),
-    credentials: 'include',
-  });
-  
-  if (!response.ok) {
-    throw new Error('Failed to update sharing settings');
+  const session = await auth0.getSession();
+  if (!session?.user) {
+    redirect('/api/login');
   }
-  
-  return await response.json();
+  const user: AppUser = await findOrCreateUser()
+
+  const client = await clientPromise;
+  const db = client.db("wishful");
+
+  const { acknowledged, modifiedCount } = await db.collection<WishlistModel>("wishlists").updateOne({
+    userId: user.id,
+    _id: new ObjectId(wishlistId)
+  }, {
+    $set: { 
+      "isPublic": isPublic,
+      "updatedAt": new Date()
+    }
+  });
+
+  return acknowledged && modifiedCount > 0;
 }
 
 export async function markOwnItemAsDeleted(wishlistId: string, itemId: string): Promise<boolean> {

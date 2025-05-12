@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { FaPlus, FaShare, FaTrash } from 'react-icons/fa';
 import AddItemModal from '@/components/wishlist/AddItemModal';
 import ShareWishlistModal from '@/components/wishlist/ShareWishlistModal';
@@ -46,6 +46,10 @@ export default function WishlistDetail({
   if (!wishlist) {
     return null;
   }
+
+  const handleCloseShareModal = useCallback(() => {
+    setShowShareModal(false);
+  }, []);
 
   return (
     <div className="mx-auto">
@@ -126,7 +130,7 @@ export default function WishlistDetail({
       {showShareModal && (
         <ShareWishlistModal
           wishlist={wishlist}
-          onClose={() => setShowShareModal(false)}
+          onClose={handleCloseShareModal}
         />
       )}
 
