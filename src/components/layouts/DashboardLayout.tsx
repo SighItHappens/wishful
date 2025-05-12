@@ -34,18 +34,18 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
   return (
     <MainLayout>
-      <div className="flex flex-col md:flex-row">
-        <aside className="w-full md:w-64 bg-white rounded-md shadow-sm py-6 px-4 mb-6 md:mb-0 md:mr-6">
+      <div className="flex flex-col md:flex-row gap-6">
+        <aside className="w-full md:w-64 bg-white dark:bg-gray-800 rounded-md shadow-sm py-6 px-4">
           <nav>
             <ul className="space-y-2">
               {menuItems.map((item, ) => (
                 <li key={item.href} className="sidebar-menu-item" style={{ opacity: menuAnimated ? 1 : 0 }}>
                   <Link
                     href={item.href}
-                    className={`flex items-center px-4 py-2 rounded-md ${
+                    className={`flex items-center px-4 py-2 rounded-md dark:hover:bg-gray-700 ${
                       pathname === item.href 
-                        ? 'bg-indigo-50 text-indigo-700' 
-                        : 'text-gray-700 hover:bg-gray-100'
+                        ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300' 
+                        : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300'
                     }`}
                   >
                     <span className="mr-3">{item.icon}</span>
@@ -59,7 +59,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         
         {/* Main content */}
         <div className="flex-1">
-          <div className="bg-white rounded-md shadow-sm p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-md shadow-sm p-6">
             {children}
           </div>
         </div>

@@ -36,10 +36,10 @@ export default function Home() {
 
 function FeatureCard({ icon, title, description } : {icon:string, title:string, description: string}) {
   return (
-    <div className="bg-gradient-to-br from-white to-indigo-50 p-6 rounded-xl shadow-lg hover:shadow-xl border border-gray-100 transform hover:-translate-y-1 transition-all duration-200">
-      <div className="text-4xl mb-4 bg-indigo-100 text-indigo-600 h-16 w-16 rounded-full flex items-center justify-center mx-auto">{icon}</div>
-      <h3 className="text-xl font-semibold mb-3 text-gray-900">{title}</h3>
-      <p className="text-gray-600">{description}</p>
+    <div className="bg-gradient-to-br from-white to-indigo-50 dark:from-gray-800 dark:to-indigo-950 p-6 rounded-xl shadow-lg hover:shadow-xl border border-gray-100 dark:border-gray-700 transform hover:-translate-y-1 transition-all duration-200">
+      <div className="text-4xl mb-4 bg-indigo-100 text-indigo-600 dark:bg-indigo-900 dark:text-indigo-400 h-16 w-16 rounded-full flex items-center justify-center mx-auto">{icon}</div>
+      <h3 className="text-xl font-semibold mb-3 text-gray-900 dark:text-gray-100">{title}</h3>
+      <p className="text-gray-600 dark:text-gray-300">{description}</p>
     </div>
   );
 }

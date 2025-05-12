@@ -1,12 +1,12 @@
 'use client';
 
-import { createContext, useState, useEffect, useContext, ReactNode } from 'react';
+import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
 
 type Theme = 'light' | 'dark';
 
 interface ThemeContextType {
   theme: Theme;
-  setTheme: (theme: Theme) => void;
+  setTheme: React.Dispatch<React.SetStateAction<Theme>>;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -14,53 +14,37 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 const LOCAL_STORAGE_KEY = 'app-theme';
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>('light');
+  const [theme, setTheme] = useState<Theme>('light');
   
   useEffect(() => {
     let initialTheme: Theme = 'light';
 
-    try {
-      const storedTheme = localStorage.getItem(LOCAL_STORAGE_KEY) as Theme | null;
-      
-      if (storedTheme && (storedTheme === 'light' || storedTheme === 'dark')) {
-        initialTheme = storedTheme;
-      } else {
-        // Optional: Check system preference if nothing is stored
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        initialTheme = prefersDark ? 'dark' : 'light';
-        // Optionally save the detected preference
-        // localStorage.setItem(LOCAL_STORAGE_KEY, initialTheme);
-      }
-    } catch (error) {
-      console.error("Could not read theme from localStorage", error);
-      // Fallback to default 'light' or system preference if reading fails
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      initialTheme = prefersDark ? 'dark' : 'light';
-    }
+    // On initial load, try to set the theme based on localStorage or system preference
+    const storedTheme = localStorage.getItem('theme') as Theme | null;
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-    if (initialTheme !== theme) {
-      setThemeState(initialTheme);
+    if (storedTheme) {
+      setTheme(storedTheme);
+    } else if (prefersDark) {
+      setTheme('dark');
     }
+  }, []);
+
+  useEffect(() => {
+    // This effect runs whenever the theme state changes.
+    // It updates the class on the <html> element and stores the preference.
+    const root = window.document.documentElement; // Get the <html> element
     
-    const root = window.document.documentElement; // <html> tag
-    root.classList.remove('light', 'dark');
-    root.classList.add(initialTheme);
-  }, [theme]);
-
-  const setTheme = (newTheme: Theme) => {
-    try {
-      localStorage.setItem(LOCAL_STORAGE_KEY, newTheme);
-      setThemeState(newTheme);
-
-      // Apply class to root element when theme changes
-      const root = window.document.documentElement;
-      root.classList.remove('light', 'dark');
-      root.classList.add(newTheme);
-
-    } catch (error) {
-      console.error("Could not save theme to localStorage", error);
+    // Remove the other theme class before adding the new one
+    if (theme === 'dark') {
+      root.classList.remove('light'); // Optional: if you were also adding a 'light' class
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+      root.classList.add('light'); // Optional: useful for targeting light explicitly if needed
     }
-  };
+    localStorage.setItem('theme', theme); // Persist the theme choice
+  }, [theme]);
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme }}>
