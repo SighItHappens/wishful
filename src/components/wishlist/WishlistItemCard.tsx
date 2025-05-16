@@ -3,16 +3,17 @@ import { useState, useRef, RefObject } from 'react';
 import { WishlistItem } from '@/types';
 import { FaTrash, FaCheck } from 'react-icons/fa';
 import { animate, utils } from 'animejs';
-import { markOwnItemAsPurchased, markOwnItemAsDeleted } from '@/services/wishlistService';
+import { markOwnItemAsPurchased, markOwnItemAsDeleted, markSharedItemAsPurchased } from '@/services/wishlistService';
 
 interface WishlistItemCardProps {
   item: WishlistItem;
   wishlistId: string;
+  isOwnerView: boolean;
   onDelete: (itemId: string) => void;
   onMarkPurchased: (itemId: string) => void;
 }
 
-export default function WishlistItemCard({ item, wishlistId, onDelete, onMarkPurchased }: WishlistItemCardProps) {
+export default function WishlistItemCard({ item, wishlistId, isOwnerView, onDelete, onMarkPurchased }: WishlistItemCardProps) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
 
@@ -57,7 +58,12 @@ export default function WishlistItemCard({ item, wishlistId, onDelete, onMarkPur
   const handleMarkPurchased = async () => {
     if (item.isPurchased) return;
 
-    const success = await markOwnItemAsPurchased(wishlistId, item.id);
+    let success;
+    if (isOwnerView) {
+      success = await markOwnItemAsPurchased(wishlistId, item.id);
+    } else {
+      success = await markSharedItemAsPurchased(wishlistId, item.id);
+    }
 
     if (success) {
       onMarkPurchased(item.id);
@@ -204,28 +210,30 @@ export default function WishlistItemCard({ item, wishlistId, onDelete, onMarkPur
             </button>
           )}
 
-          <button 
-            onClick={() => setShowDeleteConfirm(true)}
-            onMouseEnter={() => handleMouseEnterButton(deleteBgWipeRef)}
-            onMouseLeave={() => handleMouseLeaveButton(deleteBgWipeRef)}
-            className="relative cursor-pointer overflow-hidden border-1 border-red-500 dark:border-red-600 text-red-500 dark:text-red-400 hover:text-white dark:hover:text-white px-4 py-2 rounded-md transition-colors duration-100 w-full flex items-center justify-center gap-2"
-            aria-label="Delete item"
-          >
-            <span
-              ref={deleteBgWipeRef}
-              className="absolute inset-0 bg-red-500 dark:bg-red-600 w-0 -z-10"
-              aria-hidden="true"
-            ></span>
-            <span className="relative z-10 flex items-center justify-center gap-2 pointer-events-none">
-              <FaTrash className="text-sm" />
-              <span>Delete</span>
-            </span>
-          </button>
+          {isOwnerView && (
+            <button
+              onClick={() => setShowDeleteConfirm(true)}
+              onMouseEnter={() => handleMouseEnterButton(deleteBgWipeRef)}
+              onMouseLeave={() => handleMouseLeaveButton(deleteBgWipeRef)}
+              className="relative cursor-pointer overflow-hidden border-1 border-red-500 dark:border-red-600 text-red-500 dark:text-red-400 hover:text-white dark:hover:text-white px-4 py-2 rounded-md transition-colors duration-100 w-full flex items-center justify-center gap-2"
+              aria-label="Delete item"
+            >
+              <span
+                ref={deleteBgWipeRef}
+                className="absolute inset-0 bg-red-500 dark:bg-red-600 w-0 -z-10"
+                aria-hidden="true"
+              ></span>
+              <span className="relative z-10 flex items-center justify-center gap-2 pointer-events-none">
+                <FaTrash className="text-sm" />
+                <span>Delete</span>
+              </span>
+            </button>
+          )}
         </div>
       )}
 
       {/* Delete Confirmation Text */}
-      {showDeleteConfirm && (
+      {isOwnerView && showDeleteConfirm && (
         <div className="absolute inset-0 flex items-center justify-center bg-white dark:bg-gray-800 bg-opacity-90 dark:bg-opacity-95 z-20">
           <div className="text-center px-4">
             <p className="text-gray-800 dark:text-gray-100 font-medium mb-4">Are you sure?</p>

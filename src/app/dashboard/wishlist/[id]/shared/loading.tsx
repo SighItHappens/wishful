@@ -1,4 +1,4 @@
-export default function WishlistDetailLoading() {
+export default function WishlistDetailSharedLoading() {
   return (
     <div className="w-full animate-pulse">
       {/* Header skeleton */}

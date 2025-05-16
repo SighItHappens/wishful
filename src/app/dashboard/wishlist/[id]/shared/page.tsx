@@ -1,4 +1,4 @@
-import { fetchOwnWishlistWithItems } from '@/services/wishlistService';
+import { fetchWishlistWithItems } from '@/services/wishlistService';
 import WishlistDetailContent from '@/components/wishlist/WishlistDetailContent';
 import { notFound } from 'next/navigation';
 
@@ -8,11 +8,11 @@ interface SharedWishlistDetailPageProps {
 
 export default async function SharedWishlistDetailPage({ params }: SharedWishlistDetailPageProps) {
   const { id } = await params;
-  const data = await fetchOwnWishlistWithItems(id);
+  const [data, user] = await fetchWishlistWithItems(id);
   
-  if (!data) {
+  if (!data || !user) {
     notFound();
   }
   
-  return <WishlistDetailContent initialWishlist={data} />;
+  return <WishlistDetailContent initialWishlist={data} isOwnerView={false} sharedUser={user}/>;
 }
