@@ -4,7 +4,10 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { FaTimes, FaCopy, FaCheck } from 'react-icons/fa';
 import { shareWishlist } from '@/services/wishlistService';
 import { animate, createSpring } from 'animejs';
+import { Field, Label, Switch } from '@headlessui/react';
 import { Wishlist } from '@/types';
+import toast from 'react-hot-toast';
+import GenericToast from '@/components/ui/GenericToast';
 
 interface ShareWishlistModalProps {
   wishlist: Wishlist;
@@ -19,6 +22,8 @@ export default function ShareWishlistModal({ wishlist, onClose }: ShareWishlistM
   const modalRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
   const urlInputRef = useRef<HTMLInputElement>(null);
+
+  const TOAST_DURATION = 4000;
 
   const handleAnimatedClose = useCallback(() => {
     if(backdropRef.current) {
@@ -40,13 +45,43 @@ export default function ShareWishlistModal({ wishlist, onClose }: ShareWishlistM
     }
   }, [onClose]);
 
-  const handlePublicToggle = async () => {
+  const handlePublicToggle = async (newPublicState: boolean) => {
     setLoading(true);
     try {
-      await shareWishlist(wishlist.id, !isPublic);
-      setIsPublic(!isPublic);
+      const updatedWishlist = await shareWishlist(wishlist.id, newPublicState);
+      if (updatedWishlist) {
+        setIsPublic(newPublicState);
+      } else {
+        toast.custom(
+          (t) => (
+            <GenericToast
+              t={t}
+              duration={TOAST_DURATION}
+              variant="error"
+              headerText="wishlist-not-shared-notification"
+            />
+          ),
+          {
+            id: 'wishlist-not-shared-notification',
+            duration: TOAST_DURATION,
+          }
+        );
+      }
     } catch (error) {
-      console.error('Failed to update sharing settings', error);
+      toast.custom(
+        (t) => (
+          <GenericToast
+            t={t}
+            duration={TOAST_DURATION}
+            variant="error"
+            headerText="wishlist-not-shared-notification"
+          />
+        ),
+        {
+          id: 'wishlist-not-shared-notification',
+          duration: TOAST_DURATION,
+        }
+      );
     } finally {
       setLoading(false);
     }
@@ -122,24 +157,40 @@ export default function ShareWishlistModal({ wishlist, onClose }: ShareWishlistM
         
         <div className="p-6">
           <div className="mb-6">
-            <label className="flex items-center">
-              <input
-                type="checkbox"
+            <Field as="div" className="flex items-center justify-between">
+              <Label as="span" className="cursor-pointer text-gray-700 dark:text-gray-300">Make this wishlist public</Label>
+              <Switch
                 checked={isPublic}
                 onChange={handlePublicToggle}
                 disabled={loading}
-                className="rounded text-indigo-600 dark:text-indigo-500 focus:ring-indigo-500 dark:focus:ring-indigo-400 mr-2 bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600"
-              />
-              <span className="text-gray-700 dark:text-gray-300">Make this wishlist public</span>
-            </label>
-            <p className="text-gray-500 dark:text-gray-400 text-sm mt-1 ml-6">
+                className={`
+                  group inline-flex h-5 w-9 items-center rounded-full bg-gray-200 dark:bg-gray-600 transition
+                  data-checked:bg-indigo-700 dark:data-checked:bg-indigo-500 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-indigo-400
+                  ${loading ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}
+                `}
+              >
+                <span className="sr-only">Make this wishlist public</span>
+                <span
+                  aria-hidden="true"
+                  className="size-3.5 translate-x-1 rounded-full bg-white dark:bg-gray-300 transition group-data-checked:translate-x-5"
+                />
+              </Switch>
+            </Field>
+            <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
               {isPublic 
                 ? "Anyone with the link can view this wishlist" 
                 : "Only you can see this wishlist"}
             </p>
           </div>
+
+          {loading && (
+            <div className="mb-6">
+              <div className="h-5 w-20 bg-gray-300 rounded animate-pulse mb-2"></div> {/* Label Skeleton */}
+              <div className="h-8 bg-gray-200 rounded animate-pulse"></div> {/* Read-only Input Skeleton */}
+            </div>
+          )}
           
-          {isPublic && (
+          {isPublic && !loading && (
             <div className="mb-6">
               <label htmlFor="share-url" className="block text-gray-700 dark:text-gray-300 mb-2">Share Link</label>
               <div className="flex">
@@ -165,7 +216,7 @@ export default function ShareWishlistModal({ wishlist, onClose }: ShareWishlistM
           <div className="flex justify-end">
             <button
               onClick={handleAnimatedClose}
-              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 text-white rounded-md"
+              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 text-white rounded-md cursor-pointer"
             >
               Done
             </button>
