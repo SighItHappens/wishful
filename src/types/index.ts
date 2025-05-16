@@ -23,6 +23,12 @@ export interface Wishlist {
   items: WishlistItem[];
 }
 
+
+export interface SharedAppUser {
+  id: string;
+  name: string;
+}
+
 export interface AppUser {
   id: string;
   auth0Id: string;

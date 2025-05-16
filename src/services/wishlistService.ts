@@ -2,13 +2,11 @@
 
 import { auth0 } from "@/lib/auth0";
 import { WishlistModel, WishlistItemModel } from "@/types/models";
-import { AddWishlistForm, AddWishlistItemForm, AppUser, Wishlist, WishlistItem } from "@/types"
+import { AddWishlistForm, AddWishlistItemForm, AppUser, SharedAppUser, Wishlist, WishlistItem } from "@/types"
 import clientPromise from "@/lib/mongodb";
 import { findOrCreateUser } from "./userService";
 import { ObjectId, WithId } from "mongodb";
 import { redirect } from 'next/navigation';
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://192.168.50.226:8080/api';
 
 export async function fetchOwnWishlists(): Promise<Wishlist[]> {
   const session = await auth0.getSession();
@@ -56,16 +54,14 @@ export async function fetchOwnWishlistWithItems(wishlistId: string): Promise<Wis
   if (!wishlist) {
     return null;
   }
-  
-  const { createdAt, updatedAt, ...wishlistToReturn } = wishlist;
 
   return {
     id: wishlist._id.toString(),
-    userId: wishlistToReturn.userId.toString(),
-    name: wishlistToReturn.name,
-    description: wishlistToReturn.description,
-    isPublic: wishlistToReturn.isPublic,
-    itemCount: wishlistToReturn.itemCount,
+    userId: wishlist.userId,
+    name: wishlist.name,
+    description: wishlist.description,
+    isPublic: wishlist.isPublic,
+    itemCount: wishlist.itemCount,
     items: wishlist.items?.map((item: WithId<WishlistItemModel>): WishlistItem => {
       return {
         id: item._id.toString(),
@@ -76,11 +72,59 @@ export async function fetchOwnWishlistWithItems(wishlistId: string): Promise<Wis
         notes: item.notes,
         priority: item.priority,
         isPurchased: item.isPurchased,
-        purchasedBy: item.purchasedBy ? item.purchasedBy : undefined,
-        purchasedAt: item.purchasedAt ? item.purchasedAt : undefined,
+        purchasedBy: item.purchasedBy ?? undefined,
+        purchasedAt: item.purchasedAt ?? undefined,
       }
     }) ?? []
   };
+}
+
+export async function fetchWishlistWithItems(wishlistId: string): Promise<[Wishlist, SharedAppUser]> {
+  const session = await auth0.getSession();
+  if (!session?.user) {
+    redirect('/api/login');
+  }
+
+  const client = await clientPromise;
+  const db = client.db("wishful");
+
+  const wishlist = await db.collection<WishlistModel>("wishlists")
+    .findOne({ _id: new ObjectId(wishlistId) });
+
+  if (!wishlist || !wishlist.isPublic) {
+    return [{} as Wishlist, {} as SharedAppUser];
+  }
+
+  const user = await db.collection<AppUser>("users").findOne({ _id: new ObjectId(wishlist.userId) });
+  if (!user) {
+    return [{} as Wishlist, {} as SharedAppUser];
+  }
+
+  return [{
+    id: wishlist._id.toString(),
+    userId: wishlist.userId,
+    name: wishlist.name,
+    description: wishlist.description,
+    isPublic: wishlist.isPublic,
+    itemCount: wishlist.itemCount,
+    items: wishlist.items?.map((item: WithId<WishlistItemModel>): WishlistItem => {
+      return {
+        id: item._id.toString(),
+        name: item.name,
+        description: item.description,
+        price: item.price,
+        url: item.url,
+        notes: item.notes,
+        priority: item.priority,
+        isPurchased: item.isPurchased,
+        purchasedBy: item.purchasedBy ?? undefined,
+        purchasedAt: item.purchasedAt ?? undefined,
+      }
+    }) ?? []
+  }, { 
+    id: user._id.toString(),
+    name: user.name
+  }];
 }
 
 export async function createWishlist(wishlistData: AddWishlistForm): Promise<Wishlist> {
@@ -193,6 +237,30 @@ export async function markOwnItemAsPurchased(wishlistId: string, itemId: string)
 
   const { acknowledged, modifiedCount } = await db.collection<WishlistModel>("wishlists").updateOne({
     userId: user.id,
+    _id: new ObjectId(wishlistId),
+    "items._id": new ObjectId(itemId)
+  }, {
+    $set: { 
+      "items.$.isPurchased": true,
+      "items.$.purchasedBy": user.id,
+      "items.$.purchasedAt": new Date()
+    }
+  });
+
+  return acknowledged && modifiedCount > 0;
+}
+
+export async function markSharedItemAsPurchased(wishlistId: string, itemId: string): Promise<boolean> {
+  const session = await auth0.getSession();
+  if (!session?.user) {
+    redirect('/api/login');
+  }
+  const user: AppUser = await findOrCreateUser()
+
+  const client = await clientPromise;
+  const db = client.db("wishful");
+
+  const { acknowledged, modifiedCount } = await db.collection<WishlistModel>("wishlists").updateOne({
     _id: new ObjectId(wishlistId),
     "items._id": new ObjectId(itemId)
   }, {

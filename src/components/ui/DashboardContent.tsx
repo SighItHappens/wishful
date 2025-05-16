@@ -31,7 +31,7 @@ export default function DashboardContent({ initialWishlists, userProfile }: Dash
             headerText="Update Your Profile"
             bodyContent={
               <>
-                Your name seems to match your email. Please <Link href="/user/profile/edit" className="font-medium text-indigo-400 underline hover:text-indigo-300">update your profile</Link>.
+                Your name seems to match your email. <Link href="/user/profile/edit" className="font-medium text-indigo-400 underline hover:text-indigo-300">Update your profile</Link>.
               </>
             }
           />
