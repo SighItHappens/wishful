@@ -50,10 +50,6 @@ export default function WishlistDetail({
     }))
   };
 
-  if (!wishlist) {
-    return null;
-  }
-
   const handleCloseShareModal = useCallback(() => {
     setShowShareModal(false);
   }, []);
@@ -79,7 +75,11 @@ export default function WishlistDetail({
         }
       );
     }
-  }, [isOwnerView, sharedUser, initialWishlist.userId]);
+  }, [isOwnerView, sharedUser, initialWishlist.userId, wishlist.id]);
+
+  if (!wishlist) {
+    return null;
+  }
 
   return (
     <div className="mx-auto">

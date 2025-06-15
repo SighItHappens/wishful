@@ -58,7 +58,7 @@ export default function ShareWishlistModal({ wishlist, onClose }: ShareWishlistM
               t={t}
               duration={TOAST_DURATION}
               variant="error"
-              headerText="wishlist-not-shared-notification"
+              headerText="Unable to share wishlist!"
             />
           ),
           {
@@ -67,14 +67,14 @@ export default function ShareWishlistModal({ wishlist, onClose }: ShareWishlistM
           }
         );
       }
-    } catch (error) {
+    } catch {
       toast.custom(
         (t) => (
           <GenericToast
             t={t}
             duration={TOAST_DURATION}
             variant="error"
-            headerText="wishlist-not-shared-notification"
+            headerText="Unable to share wishlist!"
           />
         ),
         {
