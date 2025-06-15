@@ -1,4 +1,4 @@
-import { useEffect, useRef, ReactNode, ElementType } from 'react';
+import { useEffect, useRef, ReactNode } from 'react';
 import {
   FaInfoCircle,
   FaCheckCircle,

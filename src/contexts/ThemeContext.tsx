@@ -11,14 +11,10 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-const LOCAL_STORAGE_KEY = 'app-theme';
-
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<Theme>('light');
   
   useEffect(() => {
-    let initialTheme: Theme = 'light';
-
     // On initial load, try to set the theme based on localStorage or system preference
     const storedTheme = localStorage.getItem('theme') as Theme | null;
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback, FormEvent, ChangeEvent, Fragment } from 'react';
-import { FaTimes, FaLink, FaSpinner, FaChevronDown, FaCheck } from 'react-icons/fa';
+import { FaTimes, FaLink, FaSpinner } from 'react-icons/fa';
 import { addItemToOwnWishlist } from '@/services/wishlistService';
 import { animate, createSpring } from 'animejs';
 import { parseProductUrl } from '@/services/urlParserService';
