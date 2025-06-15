@@ -29,7 +29,7 @@ export default function ThemeToggle() {
     <button
       type="button" 
       onClick={handleToggle}
-      className="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200" 
+      className="p-2 rounded-full cursor-pointer bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200" 
       aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
     >
       <div ref={iconRef}>
