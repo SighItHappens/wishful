@@ -28,7 +28,7 @@ export default function GenericToast({ t, duration, headerText, bodyContent, var
     if (t.visible && durationBarRef.current) {
       animate(durationBarRef.current, {
         width: ['100%', '0%'],
-        easing: 'linear',
+        ease: 'linear',
         duration: duration,
       });
     }

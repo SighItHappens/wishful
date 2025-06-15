@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useCallback, useEffect, useMemo, ChangeEvent, Fragment } from 'react';
-import { FaPlus, FaShare, FaTimes, FaTrash } from 'react-icons/fa';
+import { useState, useCallback, useEffect, useMemo, ChangeEvent, useRef } from 'react';
+import { animate, utils } from 'animejs';
+import { FaFilter, FaPlus, FaShare, FaTimes, FaTrash } from 'react-icons/fa';
 import AddItemModal from '@/components/wishlist/AddItemModal';
 import ShareWishlistModal from '@/components/wishlist/ShareWishlistModal';
 import { SharedAppUser, Wishlist, WishlistItem } from '@/types';
@@ -34,8 +35,10 @@ export default function WishlistDetail({
   const [filterPriority, setFilterPriority] = useState<string>('all'); // 'all', '1', '2', '3', '4', '5'
   const [filterPurchased, setFilterPurchased] = useState<string>('all'); // 'all', 'purchased', 'available'
   const [sortBy, setSortBy] = useState<string>('default'); // 'default', 'priority-desc', 'priority-asc', 'price-asc', 'price-desc', 'name-asc', 'name-desc'
+  const [showFilterControls, setShowFilterControls] = useState(false); 
+  const [isFilterControlsMounted, setIsFilterControlsMounted] = useState(false); 
+  const filterControlsRef = useRef<HTMLDivElement>(null);
 
-  // For displaying labels in filter pills
   const priorityLabels: { [key: string]: string } = {
     '5': '5 - Must Have',
     '4': '4 - High',
@@ -125,7 +128,6 @@ export default function WishlistDetail({
         break;
       case 'default':
       default:
-        // Default sort: not purchased first, then by priority (high to low)
         tempItems.sort((a, b) => (a.isPurchased === b.isPurchased) ? (b.priority - a.priority) : a.isPurchased ? 1 : -1);
         break;
     }
@@ -166,6 +168,49 @@ export default function WishlistDetail({
     }
   }, [isOwnerView, sharedUser, initialWishlist.userId, wishlist.id]);
 
+  useEffect(() => {
+    const controlsElement = filterControlsRef.current;
+
+    if (showFilterControls) {
+      if (!isFilterControlsMounted) {
+        setIsFilterControlsMounted(true);
+      }
+
+      if (controlsElement && isFilterControlsMounted) {
+        utils.remove(controlsElement); 
+        controlsElement.style.display = 'block'; 
+        animate(controlsElement, {
+          opacity: [0, 1],
+          maxHeight: [0, controlsElement.scrollHeight + 'px'],
+          duration: 350,
+          ease: 'outQuad',
+        });
+      }
+    } else {
+      if (controlsElement && isFilterControlsMounted) {
+        utils.remove(controlsElement);
+        animate(controlsElement, {
+          opacity: [1, 0],
+          maxHeight: [controlsElement.scrollHeight + 'px', 0],
+          duration: 300,
+          ease: 'inQuad',
+          onComplete: () => {
+            setIsFilterControlsMounted(false); 
+          }
+        });
+      } else if (isFilterControlsMounted) {
+        setIsFilterControlsMounted(false);
+      }
+    }
+
+    return () => {
+      if (filterControlsRef.current) { 
+        utils.remove(filterControlsRef.current);
+      }
+    };
+  }, [showFilterControls, isFilterControlsMounted]); 
+
+
   if (!wishlist) {
     return null;
   }
@@ -200,9 +245,24 @@ export default function WishlistDetail({
         )}
       </div>
       
-      {/* Search and Filter Controls */}
       {items.length > 0 && (
-        <div className="mb-6 p-4 bg-gray-100 dark:bg-gray-700/50 rounded-lg shadow">
+        <div className="mb-4 flex justify-start">
+          <button
+            onClick={() => setShowFilterControls(!showFilterControls)}
+            className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-200 font-medium text-sm py-2 px-4 rounded-md border border-indigo-300 dark:border-indigo-700 hover:bg-indigo-50 dark:hover:bg-gray-700/60 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 cursor-pointer flex items-center gap-2"
+          >
+            <FaFilter className="h-4 w-4" />
+            {showFilterControls ? 'Hide Filters' : 'Show Filters & Sort'}
+          </button>
+        </div>
+      )}
+
+      {items.length > 0 && isFilterControlsMounted && (
+        <div 
+          ref={filterControlsRef} 
+          className="mb-6 p-4 bg-gray-100 dark:bg-gray-700/50 rounded-lg shadow overflow-hidden" 
+          style={{ maxHeight: 0, opacity: 0, display: 'none' }} 
+        >
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
               <label htmlFor="search-items" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -213,7 +273,7 @@ export default function WishlistDetail({
                 id="search-items"
                 placeholder="Search by name or description..."
                 value={searchTerm}
-                onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)} // cursor-text is default and appropriate here
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400"
               />
             </div>
@@ -273,9 +333,8 @@ export default function WishlistDetail({
         </div>
       )}
 
-      {/* Active Filters Pills & Result Count */}
       {items.length > 0 && (
-        <div className="mb-4 space-y-3">
+        <div className="mb-6 space-y-3"> 
           {isAnyFilterActive && (
             <div className="flex flex-wrap items-center gap-2 p-3 bg-gray-50 dark:bg-gray-700/30 rounded-md border border-gray-200 dark:border-gray-600/50">
               <span className="text-sm font-medium text-gray-700 dark:text-gray-300 mr-2">Active:</span>
@@ -358,8 +417,8 @@ export default function WishlistDetail({
               ))
           }
           {isOwnerView && (
-            <ItemCardAnimation index={filteredAndSortedItems.length}>
-              <button // Changed div to button for better accessibility and semantics
+            <ItemCardAnimation index={filteredAndSortedItems.length}> 
+              <button 
                 onClick={() => setShowAddItemModal(true)}
                 className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 border-dashed rounded-xl p-6 flex flex-col items-center justify-center h-full min-h-[180px] shadow-md hover:shadow-lg dark:hover:shadow-gray-600 transition-colors cursor-pointer text-left w-full"
               >

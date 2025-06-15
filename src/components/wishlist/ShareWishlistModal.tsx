@@ -149,7 +149,7 @@ export default function ShareWishlistModal({ wishlist, onClose }: ShareWishlistM
           <h2 className="text-2xl text-gray-900 dark:text-gray-100 font-bold">Share Wishlist</h2>
           <button 
             onClick={handleAnimatedClose}
-            className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+            className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 cursor-pointer"
           >
             <FaTimes />
           </button>
@@ -205,7 +205,7 @@ export default function ShareWishlistModal({ wishlist, onClose }: ShareWishlistM
                 <button
                   type="button"
                   onClick={copyToClipboard}
-                  className="bg-indigo-100 hover:bg-indigo-200 dark:bg-indigo-900 dark:hover:bg-indigo-800 text-indigo-800 dark:text-indigo-300 px-3 py-2 rounded-r-lg flex items-center"
+                  className="bg-indigo-100 hover:bg-indigo-200 dark:bg-indigo-900 dark:hover:bg-indigo-800 text-indigo-800 dark:text-indigo-300 px-3 py-2 rounded-r-lg flex items-center cursor-pointer"
                 >
                   {copied ? <FaCheck /> : <FaCopy />}
                 </button>
