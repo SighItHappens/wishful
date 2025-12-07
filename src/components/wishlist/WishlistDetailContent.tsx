@@ -168,6 +168,7 @@ export default function WishlistDetail({
     }
   }, [isOwnerView, sharedUser, initialWishlist.userId, wishlist.id]);
 
+
   useEffect(() => {
     const controlsElement = filterControlsRef.current;
 
@@ -204,12 +205,11 @@ export default function WishlistDetail({
     }
 
     return () => {
-      if (filterControlsRef.current) { 
-        utils.remove(filterControlsRef.current);
+      if (controlsElement) { 
+        utils.remove(controlsElement);
       }
     };
   }, [showFilterControls, isFilterControlsMounted]); 
-
 
   if (!wishlist) {
     return null;
