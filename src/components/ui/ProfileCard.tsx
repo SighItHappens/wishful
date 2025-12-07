@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { animate } from 'animejs';
 import Link from 'next/link';
 import { AppUser, AppUserPreferences, preferenceOptionLabels, defaultAppUserPreferences } from '@/types';
+import ThemeToggle from '@/components/ui/ThemeToggle';
 
 interface ProfileCardProps {
   initialProfile: AppUser;
@@ -97,6 +98,11 @@ export default function ProfileCard({ initialProfile }: ProfileCardProps) {
                   );
                 })}
               </ul>
+            </div>
+
+            <div className="flex items-center justify-between py-2 mt-4 border-t border-gray-200 dark:border-gray-700">
+              <span className="text-gray-900 dark:text-gray-100">Theme</span>
+              <ThemeToggle />
             </div>
           </div>
         )}

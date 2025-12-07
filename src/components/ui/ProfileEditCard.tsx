@@ -7,7 +7,6 @@ import { FaUpload, FaUserCircle } from 'react-icons/fa';
 import toast from 'react-hot-toast';
 import { updateCurrentUser } from '@/services/userService';
 import { Switch } from '@headlessui/react';
-import ThemeToggle from '@/components/ui/ThemeToggle';
 import GenericToast from '@/components/ui/GenericToast';
 
 interface ProfileEditFormProps {
@@ -250,10 +249,6 @@ export default function ProfileEditForm({ initialProfile }: ProfileEditFormProps
                     </div>
                   );
                 })}
-                <div className="flex items-center justify-between py-3 mt-2 border-t border-gray-200 dark:border-gray-700">
-                  <span className="text-gray-900 dark:text-gray-100">Theme</span>
-                  <ThemeToggle />
-                </div>
               </div>
             </div>
           </div>
