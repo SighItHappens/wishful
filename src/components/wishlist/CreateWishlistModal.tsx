@@ -4,7 +4,7 @@ import { FormEvent, useState, useCallback, ChangeEvent } from 'react';
 import { FaTimes } from 'react-icons/fa';
 import { createWishlist } from '@/services/wishlistService';
 import { useRef, useEffect } from 'react';
-import { animate, createSpring } from 'animejs';
+import { animate, spring } from 'animejs';
 import { AddWishlistForm, Wishlist } from '@/types';
 
 interface CreateWishlistModalProps {
@@ -79,7 +79,7 @@ export default function CreateWishlistModal({ onClose, onWishlistCreated }: Crea
         opacity: [0, 1],
         scale: [0.9, 1],
         duration: 400,
-        ease: createSpring()
+        ease: spring()
       });
     }
     

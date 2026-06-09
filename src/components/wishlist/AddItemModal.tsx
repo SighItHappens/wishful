@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect, useCallback, FormEvent, ChangeEvent, Fragment } from 'react';
 import { FaTimes, FaLink, FaSpinner } from 'react-icons/fa';
 import { addItemToOwnWishlist } from '@/services/wishlistService';
-import { animate, createSpring } from 'animejs';
+import { animate, spring } from 'animejs';
 import { parseProductUrl } from '@/services/urlParserService';
 import { AddWishlistItemForm, WishlistItem } from '@/types';
 
@@ -110,7 +110,7 @@ export default function AddItemModal({ wishlistId, onClose, onItemAdded }: AddIt
         opacity: [0, 1],
         scale: [0.9, 1],
         duration: 400,
-        ease: createSpring()
+        ease: spring()
       });
     }
     

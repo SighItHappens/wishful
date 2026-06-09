@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { FaTimes, FaCopy, FaCheck } from 'react-icons/fa';
 import { shareWishlist } from '@/services/wishlistService';
-import { animate, createSpring } from 'animejs';
+import { animate, spring } from 'animejs';
 import { Field, Label, Switch } from '@headlessui/react';
 import { Wishlist } from '@/types';
 import toast from 'react-hot-toast';
@@ -87,21 +87,46 @@ export default function ShareWishlistModal({ wishlist, onClose }: ShareWishlistM
     }
   };
 
-  const copyToClipboard = () => {
+  const copyToClipboard = (text: string) => {
     if (urlInputRef.current) {
-      urlInputRef.current.select();
-      document.execCommand('copy');
-      setCopied(true);
-      
-      // Reset copied state after 2 seconds
-      setTimeout(() => setCopied(false), 2000);
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text)
+          .then(() => {
+            setCopied(true);
+            // Reset copied state after 2 seconds
+            setTimeout(() => setCopied(false), 2000);
+          })
+          .catch(() => {
+            toast.custom(
+              (t) => (
+                <GenericToast
+                  t={t}
+                  duration={TOAST_DURATION}
+                  variant="error"
+                  headerText="Failed to copy link!"
+                />
+              ),
+              {
+                id: 'copy-link-failed-notification',
+                duration: TOAST_DURATION,
+              }
+            );
+          });
+      } else if (urlInputRef.current) {
+        urlInputRef.current.select();
+        document.execCommand('copy');
+        setCopied(true);
+
+        // Reset copied state after 2 seconds
+        setTimeout(() => setCopied(false), 2000);
+      }
     }
   };
 
   useEffect(() => {
     // Generate share URL
     const baseUrl = window.location.origin;
-    setShareUrl(`${baseUrl}/dashboard/shared/wishlist/${wishlist.id}`);
+    setShareUrl(`${baseUrl}/dashboard/wishlist/${wishlist.id}/shared`);
     
     if(backdropRef.current) {
       animate(backdropRef.current, {
@@ -115,7 +140,7 @@ export default function ShareWishlistModal({ wishlist, onClose }: ShareWishlistM
         opacity: [0, 1],
         scale: [0.9, 1],
         duration: 400,
-        ease: createSpring()
+        ease: spring()
       });
     }
     
@@ -204,7 +229,7 @@ export default function ShareWishlistModal({ wishlist, onClose }: ShareWishlistM
                 />
                 <button
                   type="button"
-                  onClick={copyToClipboard}
+                  onClick={() => copyToClipboard(shareUrl)}
                   className="bg-indigo-100 hover:bg-indigo-200 dark:bg-indigo-900 dark:hover:bg-indigo-800 text-indigo-800 dark:text-indigo-300 px-3 py-2 rounded-r-lg flex items-center cursor-pointer"
                 >
                   {copied ? <FaCheck /> : <FaCopy />}

@@ -1,5 +1,5 @@
 import { useRef, useEffect } from 'react';
-import { animate, createSpring } from 'animejs';
+import { animate, spring } from 'animejs';
 
 interface ItemCardAnimationProps {
   children: React.ReactNode;
@@ -14,7 +14,7 @@ export default function ItemCardAnimation({ children, index }: ItemCardAnimation
       animate(cardRef.current, {
         translateY: [50, 0],
         opacity: [0, 1],
-        ease: createSpring(),
+        ease: spring(),
         duration: 500,
         delay: index * 100
       });
