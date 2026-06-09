@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { animate, createSpring } from 'animejs';
+import { animate, spring } from 'animejs';
 import { Wishlist } from '@/types';
 import { useRouter } from 'next/navigation';
 import { deleteWishlist } from '@/services/wishlistService';
@@ -66,7 +66,7 @@ export default function DeleteWishlistModal({ wishlist, onClose }: DeleteWishlis
         opacity: [0, 1],
         scale: [0.9, 1],
         duration: 400,
-        ease: createSpring()
+        ease: spring()
       });
     }
     
